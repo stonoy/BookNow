@@ -3,6 +3,7 @@ require("express-async-errors")
 require("dotenv").config()
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
+const path = require("path")
 
 const connectDB = require("./config")
 const userRouter = require("./routes/user")
@@ -12,7 +13,7 @@ const userAuth = require('./middlewares/authMiddleware')
 const bookingRouter = require('./routes/booking')
 
 const app = express()
-
+app.use(express.static(path.resolve(__dirname, "./client/dist"))); // PROVIDING FRONTEND APP
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -25,6 +26,9 @@ app.use("/api/v1/user", userRouter)
 app.use("/api/v1/appointment",apptRouter)
 app.use("/api/v1/booking", bookingRouter)
 
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./client/dist", "index.html")); // SERVER GIVEING FRONTEND APP TO USERS
+  });
 
 app.use("*", (req, res) => {
     res.status(404).json({msg: "no such route found"})

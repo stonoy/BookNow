@@ -65,6 +65,17 @@ const logout = async(req, res) => {
     res.status(200).json({msg: "user logged out"})
 }
 
+const getAllUsers = async (req, res) => {
+    let users = await User.find({role: "user"}).lean()
+
+    users = users.map(user => {
+        delete user.password
+        return user
+    })
+
+    res.status(200).json({users})
+}
+
 const setOwner = async(req, res) => {
     const {userid} = req.params
 
@@ -73,4 +84,4 @@ const setOwner = async(req, res) => {
     res.status(200).json({msg: "user updated"})
 }
 
-module.exports = {register, login, logout, setOwner}
+module.exports = {register, login, logout, setOwner, getAllUsers}

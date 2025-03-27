@@ -12,6 +12,11 @@ const createBooking = async(req, res) => {
         return
     }
 
+    if (theAppointment.status == "cancelled"){
+        createError("appointment already cancelled", 400)
+        return
+    }
+
     const theSlot = theAppointment?.slots.find(s => s._id.toString() == slot)
 
     if (!theSlot){
@@ -50,9 +55,16 @@ const createBooking = async(req, res) => {
 }
 
 const getBooking = async(req, res) => {
-    const myBookings = await Booking.find({user: req.user._id}).populate("appointment")
+    const page = parseInt(req.query.page) || 1
+    const limit = 2
+    const skip = (page-1)*limit
 
-    res.status(200).json({myBookings})
+    const myBookings = await Booking.find({user: req.user._id}).populate("appointment").skip(skip).limit(limit)
+
+    const totalMyBookings = await Booking.countDocuments({user: req.user._id})
+    const numOfPages = Math.ceil(totalMyBookings/limit)
+
+    res.status(200).json({myBookings, numOfPages, page})
 }
 
 const modifyBooking = async(req, res) => {

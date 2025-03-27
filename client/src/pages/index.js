@@ -1,0 +1,8 @@
+export {default as HomeLayOut} from "./HomeLayOut"
+export {default as Landing} from "./Landing"
+export {default as Login} from "./Login"
+export {default as Register} from "./Register"
+export {default as MyBookings} from "./MyBookings"
+export {default as Appointment} from "./Appointment"
+export {default as Admin} from "./Admin"
+export {default as ErrorPage} from "./ErrorPage"
